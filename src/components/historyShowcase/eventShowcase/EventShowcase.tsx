@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import reactLogo from "../../../assets/react.svg";
 import viteLogo from "/vite.svg";
+import "swiper/swiper-bundle.css";
 import { Navigation } from "swiper/modules";
 export default function EventShowcase() {
 	const [count, setCount] = useState(0);

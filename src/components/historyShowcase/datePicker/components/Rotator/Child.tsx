@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const SquareComponent = styled("div").withConfig({
 	shouldForwardProp: (prop) =>
@@ -15,6 +15,7 @@ const SquareComponent = styled("div").withConfig({
 	maincolor: string;
 }>((props) => ({
 	position: "absolute",
+	zIndex: 1,
 	"-webkit-transition": "all 0.5s linear",
 	"-moz-transition": " all 0.5s linear",
 	transition: "transform 0.5s linear",
@@ -52,11 +53,28 @@ const SquareValue = styled.div`
 	transition: transform 0.3s linear;
 `;
 
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+const HintText = styled.div`
+	position: absolute;
+	left: 150%;
+	background: none;
+	animation: ${fadeIn} 0.5s linear;
+`;
+
 export function Square({
 	css,
 	num,
 	onClick,
 	selected,
+	text,
 }: {
 	css: {
 		rotate: number;
@@ -67,18 +85,22 @@ export function Square({
 	num: number;
 	onClick: React.MouseEventHandler<HTMLDivElement>;
 	selected?: boolean;
+	text: string;
 }) {
 	return (
-		<SquareComponent
-			childradius={`${css.childRadius * 2}px`}
-			radius={css.radius}
-			rotate={css.rotate}
-			rotatereverse={css.rotateReverse}
-			selected={selected}
-			maincolor={"rgb(66, 86, 122)"} //sh
-			onClick={onClick}
-		>
-			<SquareValue>{num}</SquareValue>
-		</SquareComponent>
+		<>
+			<SquareComponent
+				childradius={`${css.childRadius * 2}px`}
+				radius={css.radius}
+				rotate={css.rotate}
+				rotatereverse={css.rotateReverse}
+				selected={selected}
+				maincolor={"rgb(66, 86, 122)"} //sh
+				onClick={onClick}
+			>
+				<SquareValue>{num}</SquareValue>
+				{selected && <HintText>{text}</HintText>}
+			</SquareComponent>
+		</>
 	);
 }
