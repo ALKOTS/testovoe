@@ -3,6 +3,7 @@ import "./App.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import HistoryShowCase from "./components/historyShowcase/HistoryShowCase";
+import EventShowcase from "./components/historyShowcase/eventShowcase/EventShowcase";
 
 const data = [
 	{
@@ -84,6 +85,7 @@ function App() {
 			}}
 		>
 			<HistoryShowCase data={data} />
+			{/* <EventShowcase /> */}
 		</div>
 	);
 }

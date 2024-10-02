@@ -1,5 +1,5 @@
-import { useState } from "react";
-import DatePicker from "./datePicker/DatePicker";
+import { useRef, useState } from "react";
+import { DatePicker } from "./datePicker/DatePicker";
 import EventShowcase from "./eventShowcase/EventShowcase";
 import type { Date } from "./datePicker/components/Rotator/Rotator";
 import styled from "styled-components";
@@ -27,7 +27,7 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				display: "grid",
 				gridTemplateRows: "1fr 1fr 1fr",
 				// flexDirection: "column",
-				// alignItems: "center",
+				alignItems: "center",
 				height: "100%",
 				justifyContent: "center",
 				padding: "0 40px",
@@ -44,7 +44,7 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				currentDate={currentDate}
 				setCurrentDate={setCurrentDate}
 			/>
-			<EventShowcase />
+			<EventShowcase data={data} />
 		</div>
 	);
 }

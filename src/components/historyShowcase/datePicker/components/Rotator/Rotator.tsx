@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Square } from "./Child";
 import right_arrow from "../../../../../assets/right_arrow.svg";
@@ -15,8 +15,6 @@ const RotatorComponent = styled.div`
 	/* background: orange; */
 	align-self: center;
 	border-radius: 50%;
-	/* margin: 40px auto 40px; */
-	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -86,8 +84,9 @@ const YearsShowcase = styled.div`
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
-	width: 100%;
+	/* width: 100%; */
 	z-index: 1;
+	gap: 100px;
 	position: absolute;
 `;
 
@@ -128,7 +127,7 @@ function buildRotator(
 	setChildren(items);
 }
 
-export default function Rotator({
+export function Rotator({
 	rotatorRadius = 100,
 	childRadius = 10,
 	dates = [{ theme: "placeholder", years: { 2024: "placeholder_2024" } }],
@@ -143,7 +142,6 @@ export default function Rotator({
 	currentDate?: number;
 	setCurrentDate?: React.Dispatch<React.SetStateAction<number>>;
 }) {
-	// console.log(dates);
 	const animStyle = {
 		fontWeight: 700,
 		lineHeight: "160px",
@@ -193,7 +191,7 @@ export default function Rotator({
 	useEffect(() => {
 		buildRotator(childCount, rotatorRadius, childRadius, position, setChildren);
 	}, [position]);
-	console.log(Object.keys(dates[currentDate_].years)[0]);
+	console.log(dates[currentDate_]);
 	return (
 		<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
 			<LeftContainer>
@@ -232,27 +230,30 @@ export default function Rotator({
 					</ButtonContainer>
 				</PaginationContainer>
 			</LeftContainer>
-			<YearsShowcase>
-				<AnimatedCounter
-					style={{ ...animStyle, ...{ color: "rgb(93,95,239)" } }}
-					targetNumber={Number.parseInt(
-						Object.keys(dates[currentDate_].years)[0]
-					)}
-				/>
-				<AnimatedCounter
-					style={{ ...animStyle, ...{ color: "rgb(239,93,168)" } }}
-					targetNumber={Number.parseInt(
-						Object.keys(dates[currentDate_].years).slice(-1)[0]
-					)}
-				/>
-			</YearsShowcase>
+
 			<RotatorComponent
 				style={{
 					width: `${rotatorRadius * 2}px`,
 					height: `${rotatorRadius * 2}px`,
+					position: "absolute",
+					left: `calc(50% - ${rotatorRadius}px)`,
 				}}
 				className="transparent-border"
 			>
+				<YearsShowcase>
+					<AnimatedCounter
+						style={{ ...animStyle, ...{ color: "rgb(93,95,239)" } }}
+						targetNumber={Number.parseInt(
+							Object.keys(dates[currentDate_].years)[0]
+						)}
+					/>
+					<AnimatedCounter
+						style={{ ...animStyle, ...{ color: "rgb(239,93,168)" } }}
+						targetNumber={Number.parseInt(
+							Object.keys(dates[currentDate_].years).slice(-1)[0]
+						)}
+					/>
+				</YearsShowcase>
 				<div
 					style={{
 						position: "absolute",

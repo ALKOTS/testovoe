@@ -1,6 +1,6 @@
-import Rotator, { Date } from "./components/Rotator/Rotator";
+import { Rotator, Date } from "./components/Rotator/Rotator";
 
-export default function DatePicker({
+export function DatePicker({
 	rotatorRadius,
 	childRadius,
 	data,

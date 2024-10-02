@@ -37,6 +37,7 @@ const SquareComponent = styled("div").withConfig({
 			transform: "scale(1)",
 			backgroundColor: "white",
 		},
+		cursor: "pointer",
 		transform: `rotate(${props.rotate}deg) translate(${props.radius}px) rotate(${props.rotatereverse}deg)`,
 	},
 }));
