@@ -6,12 +6,14 @@ export function DatePicker({
 	data,
 	currentDate,
 	setCurrentDate,
+	padding,
 }: {
 	rotatorRadius?: number;
 	childRadius?: number;
 	data?: Date[];
 	currentDate?: number;
 	setCurrentDate?: React.Dispatch<React.SetStateAction<number>>;
+	padding?: number;
 }) {
 	return (
 		<Rotator
@@ -20,6 +22,7 @@ export function DatePicker({
 			dates={data}
 			currentDate={currentDate}
 			setCurrentDate={setCurrentDate}
+			padding={padding}
 		/>
 	);
 }

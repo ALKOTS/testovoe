@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
 const SquareComponent = styled("div").withConfig({
@@ -18,7 +18,7 @@ const SquareComponent = styled("div").withConfig({
 	zIndex: 1,
 	"-webkit-transition": "all 0.5s linear",
 	"-moz-transition": " all 0.5s linear",
-	transition: "transform 0.5s linear",
+	transition: "all 0.5s linear",
 	left: "0",
 	display: "flex",
 	"justify-content": "center",
@@ -31,6 +31,7 @@ const SquareComponent = styled("div").withConfig({
 		transform: `scale(${
 			props.selected ? 1 : 6 / parseFloat(props.childradius)
 		})`,
+		// opacity: props.selected ? 1 : 0,
 	},
 	"&:hover": {
 		"&>*": {
@@ -63,18 +64,28 @@ const fadeIn = keyframes`
     }
 `;
 
+const fadeOut = keyframes`
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+    
+`;
+
 const HintText = styled.div`
 	position: absolute;
 	left: 150%;
-	background: none;
-	animation: ${fadeIn} 0.5s linear;
+	background: none !important;
+	animation: ${fadeIn} 0.2s linear;
 `;
 
 export function Square({
 	css,
 	num,
 	onClick,
-	selected,
+	selected = false,
 	text,
 }: {
 	css: {
@@ -88,6 +99,14 @@ export function Square({
 	selected?: boolean;
 	text: string;
 }) {
+	const [showHint, setShowHint] = useState(false);
+
+	useEffect(() => {
+		// setTimeout(() => {
+		setShowHint(selected);
+		// }, 500);
+	}, [selected]);
+
 	return (
 		<>
 			<SquareComponent
@@ -100,7 +119,7 @@ export function Square({
 				onClick={onClick}
 			>
 				<SquareValue>{num}</SquareValue>
-				{selected && <HintText>{text}</HintText>}
+				{showHint && <HintText>{text}</HintText>}
 			</SquareComponent>
 		</>
 	);

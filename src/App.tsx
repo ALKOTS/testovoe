@@ -9,7 +9,7 @@ const data = [
 	{
 		theme: "Кино",
 		years: {
-			1980: "Release of 'Raging Bull' directed by Martin Scorsese",
+			1981: "Release of 'Raging Bull' directed by Martin Scorsese",
 			1994: "Release of 'Pulp Fiction' directed by Quentin Tarantino",
 			2017: "Release of 'Dunkirk' directed by Christopher Nolan",
 			2018: "Oscar winner 'The Shape of Water' directed by Guillermo del Toro",
@@ -47,18 +47,18 @@ const data = [
 			2017: "placeholder_2017_1",
 			2019: "placeholder_2019_1",
 			2020: "placeholder_2020_1",
-			2021: "placeholder_2021_1",
+			2022: "placeholder_2021_1",
 		},
 	},
 	{
 		theme: "Placeholder2",
 		years: {
-			1985: "placeholder_1985_2",
+			1986: "placeholder_1985_2",
 			1995: "placeholder_1995_2",
 			2017: "placeholder_2017_2",
 			2018: "placeholder_2018_2",
 			2019: "placeholder_2019_2",
-			2021: "placeholder_2021_2",
+			2023: "placeholder_2021_2",
 		},
 	},
 	{
@@ -69,7 +69,7 @@ const data = [
 			2017: "placeholder_2017_3",
 			2018: "placeholder_2018_3",
 			2019: "placeholder_2019_3",
-			2020: "placeholder_2020_3",
+			2024: "placeholder_2020_3",
 		},
 	},
 ];

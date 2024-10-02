@@ -18,6 +18,7 @@ const HLine = styled.div`
 `;
 export default function HistoryShowCase({ data }: { data: Date[] }) {
 	const [currentDate, setCurrentDate] = useState(0);
+	const padding = 40;
 	return (
 		<div
 			style={{
@@ -26,11 +27,12 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				position: "relative",
 				display: "grid",
 				gridTemplateRows: "1fr 1fr 1fr",
+				gridTemplateColumns: "100%",
 				// flexDirection: "column",
 				alignItems: "center",
 				height: "100%",
 				justifyContent: "center",
-				padding: "0 40px",
+				padding: `0 ${padding}px`,
 			}}
 			className="transparent-border"
 		>
@@ -43,8 +45,9 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				data={data}
 				currentDate={currentDate}
 				setCurrentDate={setCurrentDate}
+				padding={padding}
 			/>
-			<EventShowcase data={data} />
+			<EventShowcase data={data} currentDate={currentDate} />
 		</div>
 	);
 }

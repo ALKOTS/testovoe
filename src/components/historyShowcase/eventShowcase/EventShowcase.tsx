@@ -5,13 +5,20 @@ import viteLogo from "/vite.svg";
 import "swiper/swiper-bundle.css";
 import { Navigation } from "swiper/modules";
 import { Date } from "../datePicker/components/Rotator/Rotator";
-export default function EventShowcase({ data }: { data: Date[] }) {
-	const [count, setCount] = useState(0);
+export default function EventShowcase({
+	data,
+	currentDate,
+}: {
+	data: Date[];
+	currentDate: number;
+}) {
+	// const [count, setCount] = useState(0);
+	console.log(data);
 	return (
 		<div style={{ overflow: "hidden" }}>
 			<Swiper
 				modules={[Navigation]}
-				slidesPerView={1}
+				slidesPerView={3}
 				navigation
 				spaceBetween={10}
 				pagination={{
@@ -20,16 +27,20 @@ export default function EventShowcase({ data }: { data: Date[] }) {
 				// preventInteractionOnTransition={true}
 				// allowTouchMove={false}
 				// noSwiping={true}
-				onSlideChange={() => {
-					setCount(count + 1);
-				}}
+				// onSlideChange={() => {
+				// 	setCount(count + 1);
+				// }}
 			>
-				<SwiperSlide>
-					<img src={reactLogo} alt="React logo" />
-				</SwiperSlide>
-				<SwiperSlide>
-					<img src={viteLogo} alt="Vite logo" />
-				</SwiperSlide>
+				{Object.keys(data[currentDate].years).map(
+					(year: string, index: number) => {
+						return (
+							<SwiperSlide key={index}>
+								<div>{year}</div>
+								<div>{data[currentDate].years[Number.parseInt(year)]}</div>
+							</SwiperSlide>
+						);
+					}
+				)}
 			</Swiper>
 		</div>
 	);

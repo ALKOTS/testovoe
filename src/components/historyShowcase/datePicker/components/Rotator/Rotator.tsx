@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Square } from "./Child";
 import right_arrow from "../../../../../assets/right_arrow.svg";
@@ -135,15 +135,17 @@ export function Rotator({
 	setCurrentDate = () => {
 		console.log("No setter configured");
 	},
+	padding = 40,
 }: {
 	rotatorRadius?: number;
 	childRadius?: number;
 	dates?: Date[];
 	currentDate?: number;
 	setCurrentDate?: React.Dispatch<React.SetStateAction<number>>;
+	padding?: number;
 }) {
 	const animStyle = {
-		fontWeight: 700,
+		fontWeight: "700",
 		lineHeight: "160px",
 		textAlign: "center",
 		letterSpacing: "-0.02em",
@@ -192,19 +194,23 @@ export function Rotator({
 		buildRotator(childCount, rotatorRadius, childRadius, position, setChildren);
 	}, [position]);
 	console.log(dates[currentDate_]);
+
+	const headerRef = useRef<HTMLDivElement>(null);
 	return (
 		<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
 			<LeftContainer>
 				<HeaderContainer>
 					<div
 						style={{
-							height: "100%",
+							position: "absolute",
+							left: `-${padding}px`,
+							height: `${headerRef.current?.offsetHeight}px`,
 							width: "5px",
 							background:
 								"linear-gradient(180deg, rgba(93,95,239,1) 0%, rgba(239,93,168,1) 100%)",
 						}}
 					></div>
-					<Header>Исторические даты</Header>
+					<Header ref={headerRef}>Исторические даты</Header>
 				</HeaderContainer>
 
 				<PaginationContainer>

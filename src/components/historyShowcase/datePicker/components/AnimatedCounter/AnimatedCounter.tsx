@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 interface AnimatedCounterProps {
 	targetNumber: number;
 	animationDuration?: number;
-	style?: React.CSSProperties;
+	style?: { [key: string]: string };
 }
 
 function AnimatedCounter({
