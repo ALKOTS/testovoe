@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Square } from "./Child";
-import right_arrow from "../../../../../assets/right_arrow.svg";
-import left_arrow from "../../../../../assets/left_arrow.svg";
-import AnimatedCounter from "../AnimatedCounter/AnimatedCounter";
+import right_arrow from "../../../assets/right_arrow.svg";
+import left_arrow from "../../../assets/left_arrow.svg";
+import AnimatedCounter from "./AnimatedCounter/AnimatedCounter";
 // import { AnimatedCounter } from "react-animated-counter";
 
 export interface Date {
@@ -12,7 +12,6 @@ export interface Date {
 }
 
 const RotatorComponent = styled.div`
-	/* background: orange; */
 	align-self: center;
 	border-radius: 50%;
 	display: flex;
@@ -22,11 +21,7 @@ const RotatorComponent = styled.div`
 
 const RotatorContainer = styled.div`
 	width: 100%;
-	/* display: flex; */
-	/* flex-direction: row; */
-	/* align-items: center; */
 	position: relative;
-	/* justify-content: center; */
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	align-items: center;
@@ -136,6 +131,8 @@ export function Rotator({
 		console.log("No setter configured");
 	},
 	padding = 40,
+	spinTime = 500,
+	fadeTime = 200,
 }: {
 	rotatorRadius?: number;
 	childRadius?: number;
@@ -143,7 +140,11 @@ export function Rotator({
 	currentDate?: number;
 	setCurrentDate?: React.Dispatch<React.SetStateAction<number>>;
 	padding?: number;
+	spinTime?: number;
+	fadeTime?: number;
 }) {
+	const fromColor = "rgba(93,95,239,1)";
+	const toColor = "rgba(239,93,168,1)";
 	const animStyle = {
 		fontWeight: "700",
 		lineHeight: "160px",
@@ -193,27 +194,24 @@ export function Rotator({
 	useEffect(() => {
 		buildRotator(childCount, rotatorRadius, childRadius, position, setChildren);
 	}, [position]);
-	console.log(dates[currentDate_]);
+	// console.log(dates[currentDate_]);
 
 	const headerRef = useRef<HTMLDivElement>(null);
 	return (
 		<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
 			<LeftContainer>
-				<HeaderContainer>
+				<HeaderContainer style={{ gap: padding }}>
 					<div
 						style={{
-							position: "absolute",
-							left: `-${padding}px`,
-							height: `${headerRef.current?.offsetHeight}px`,
+							height: "100%",
 							width: "5px",
-							background:
-								"linear-gradient(180deg, rgba(93,95,239,1) 0%, rgba(239,93,168,1) 100%)",
+							background: `linear-gradient(180deg, ${fromColor}0%, ${toColor} 100%)`,
 						}}
 					></div>
 					<Header ref={headerRef}>Исторические даты</Header>
 				</HeaderContainer>
 
-				<PaginationContainer>
+				<PaginationContainer style={{ paddingLeft: padding }}>
 					<div style={{ fontSize: "18px", alignSelf: "flex-start" }}>
 						{currentDate_ > 10 ? currentDate_ + 1 : `0${currentDate_ + 1}`}/
 						{dates.length > 10 ? dates.length : `0${dates.length}`}
@@ -224,14 +222,14 @@ export function Rotator({
 								changeDate(currentDate_ - 1);
 							}}
 						>
-							<img src={left_arrow} alt="left arrow" />
+							<img src={left_arrow} alt="<" />
 						</PaginationButton>
 						<PaginationButton
 							onClick={() => {
 								changeDate(currentDate_ + 1);
 							}}
 						>
-							<img src={right_arrow} alt="right arrow" />
+							<img src={right_arrow} alt=">" />
 						</PaginationButton>
 					</ButtonContainer>
 				</PaginationContainer>
@@ -248,13 +246,13 @@ export function Rotator({
 			>
 				<YearsShowcase>
 					<AnimatedCounter
-						style={{ ...animStyle, ...{ color: "rgb(93,95,239)" } }}
+						style={{ ...animStyle, ...{ color: `${fromColor}` } }}
 						targetNumber={Number.parseInt(
 							Object.keys(dates[currentDate_].years)[0]
 						)}
 					/>
 					<AnimatedCounter
-						style={{ ...animStyle, ...{ color: "rgb(239,93,168)" } }}
+						style={{ ...animStyle, ...{ color: `${toColor}` } }}
 						targetNumber={Number.parseInt(
 							Object.keys(dates[currentDate_].years).slice(-1)[0]
 						)}
@@ -276,6 +274,8 @@ export function Rotator({
 								selected={index === currentDate_}
 								text={dates[index].theme}
 								onClick={() => changeDate(index)}
+								spinTime={spinTime}
+								fadeTime={fadeTime}
 							/>
 						);
 					})}

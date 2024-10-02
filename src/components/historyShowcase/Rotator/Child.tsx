@@ -8,40 +8,45 @@ const SquareComponent = styled("div").withConfig({
 		),
 })<{
 	radius: number;
-	childradius: string;
+	childradius: number;
 	rotate: number;
 	rotatereverse: number;
 	selected?: boolean;
 	maincolor: string;
-}>((props) => ({
-	position: "absolute",
-	zIndex: 1,
-	"-webkit-transition": "all 0.5s linear",
-	"-moz-transition": " all 0.5s linear",
-	transition: "all 0.5s linear",
-	left: "0",
-	display: "flex",
-	"justify-content": "center",
-	"align-items": "center",
-	width: props.childradius,
-	height: props.childradius,
-	transform: `rotate(${props.rotate}deg) translate(${props.radius}px) rotate(${props.rotatereverse}deg) `,
-	"&>*": {
-		backgroundColor: `${props.selected ? "white" : props.maincolor}`,
-		transform: `scale(${
-			props.selected ? 1 : 6 / parseFloat(props.childradius)
-		})`,
+}>`
+	position: absolute;
+	z-index: 1;
+	-webkit-transition: all 0.5s linear;
+	-moz-transition: all 0.5s linear;
+	transition: all 0.5s linear;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: ${({ childradius }) => childradius}px;
+	height: ${({ childradius }) => childradius}px;
+	transform: rotate(${({ rotate }) => rotate}deg)
+		translate(${({ radius }) => radius}px)
+		rotate(${({ rotatereverse }) => rotatereverse}deg);
+	> * {
+		background-color: ${({ selected, maincolor }) =>
+			selected ? "white" : maincolor};
+		transform: scale(
+			${({ selected, childradius }) => (selected ? 1 : 6 / childradius)}
+		);
 		// opacity: props.selected ? 1 : 0,
-	},
-	"&:hover": {
-		"&>*": {
-			transform: "scale(1)",
-			backgroundColor: "white",
-		},
-		cursor: "pointer",
-		transform: `rotate(${props.rotate}deg) translate(${props.radius}px) rotate(${props.rotatereverse}deg)`,
-	},
-}));
+	}
+	&:hover {
+		> * {
+			transform: scale(1);
+			background-color: white;
+		}
+		cursor: pointer;
+		transform: rotate(${({ rotate }) => rotate}deg)
+			translate(${({ radius }) => radius}px)
+			rotate(${({ rotatereverse }) => rotatereverse}deg);
+	}
+`;
 
 const SquareValue = styled.div`
 	width: 100%;
@@ -53,6 +58,9 @@ const SquareValue = styled.div`
 	border: 1px solid;
 	border-radius: 100%;
 	transition: transform 0.3s linear;
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none;
 `;
 
 const fadeIn = keyframes`
@@ -74,12 +82,22 @@ const fadeOut = keyframes`
     
 `;
 
-const HintText = styled.div`
+const HintText = styled("div").withConfig({
+	shouldForwardProp: (prop) => !["fadeTime"].includes(prop),
+})<{ fadeTime: number }>`
 	position: absolute;
 	left: 150%;
 	background: none !important;
-	animation: ${fadeIn} 0.2s linear;
+	animation: ${({ fadeTime }) => fadeIn} ${({ fadeTime }) => fadeTime / 1000}s
+		linear;
 `;
+
+// const HintText = styled.div`
+// 	position: absolute;
+// 	left: 150%;
+// 	background: none !important;
+// 	animation: ${fadeIn} 0.2s linear;
+// `;
 
 export function Square({
 	css,
@@ -87,6 +105,8 @@ export function Square({
 	onClick,
 	selected = false,
 	text,
+	spinTime = 500,
+	fadeTime = 200,
 }: {
 	css: {
 		rotate: number;
@@ -98,6 +118,8 @@ export function Square({
 	onClick: React.MouseEventHandler<HTMLDivElement>;
 	selected?: boolean;
 	text: string;
+	spinTime?: number;
+	fadeTime?: number;
 }) {
 	const [showHint, setShowHint] = useState(false);
 
@@ -110,7 +132,7 @@ export function Square({
 	return (
 		<>
 			<SquareComponent
-				childradius={`${css.childRadius * 2}px`}
+				childradius={css.childRadius * 2}
 				radius={css.radius}
 				rotate={css.rotate}
 				rotatereverse={css.rotateReverse}
@@ -119,7 +141,7 @@ export function Square({
 				onClick={onClick}
 			>
 				<SquareValue>{num}</SquareValue>
-				{showHint && <HintText>{text}</HintText>}
+				{showHint && <HintText fadeTime={fadeTime}>{text}</HintText>}
 			</SquareComponent>
 		</>
 	);

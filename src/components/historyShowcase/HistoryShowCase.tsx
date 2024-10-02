@@ -1,7 +1,6 @@
-import { useRef, useState } from "react";
-import { DatePicker } from "./datePicker/DatePicker";
+import { useState } from "react";
 import EventShowcase from "./eventShowcase/EventShowcase";
-import type { Date } from "./datePicker/components/Rotator/Rotator";
+import { Rotator, type Date } from "./Rotator/Rotator";
 import styled from "styled-components";
 const VLine = styled.div`
 	width: 1px;
@@ -16,9 +15,12 @@ const HLine = styled.div`
 	position: absolute;
 	top: 50%;
 `;
+
 export default function HistoryShowCase({ data }: { data: Date[] }) {
 	const [currentDate, setCurrentDate] = useState(0);
 	const padding = 40;
+	const spinTime = 500;
+	const fadeTime = 200;
 	return (
 		<div
 			style={{
@@ -32,22 +34,29 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				alignItems: "center",
 				height: "100%",
 				justifyContent: "center",
-				padding: `0 ${padding}px`,
+				// padding: `0 ${padding}px`,
 			}}
 			className="transparent-border"
 		>
 			<VLine className="transparent-line" />
 			<HLine className="transparent-line" />
 			<div></div>
-			<DatePicker
+			<Rotator
 				rotatorRadius={265}
 				childRadius={28}
-				data={data}
+				dates={data}
 				currentDate={currentDate}
 				setCurrentDate={setCurrentDate}
 				padding={padding}
+				spinTime={spinTime}
+				fadeTime={fadeTime}
 			/>
-			<EventShowcase data={data} currentDate={currentDate} />
+			<EventShowcase
+				data={data[currentDate]}
+				currentDate={currentDate}
+				spinTime={spinTime}
+				fadeTime={fadeTime}
+			/>
 		</div>
 	);
 }
