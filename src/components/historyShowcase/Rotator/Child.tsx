@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 
 const SquareComponent = styled("div").withConfig({
 	shouldForwardProp: (prop) =>
-		!["radius", "childRadius", "rotate", "rotateReverse", "maincolor"].includes(
+		!["radius", "childRadius", "rotate", "rotateReverse", "spinTime"].includes(
 			prop
 		),
 })<{
@@ -11,14 +11,13 @@ const SquareComponent = styled("div").withConfig({
 	childradius: number;
 	rotate: number;
 	rotatereverse: number;
-	selected?: boolean;
-	maincolor: string;
+	spinTime: number;
 }>`
 	position: absolute;
 	z-index: 1;
-	-webkit-transition: all 0.5s linear;
-	-moz-transition: all 0.5s linear;
-	transition: all 0.5s linear;
+	-webkit-transition: all ${({ spinTime }) => spinTime / 1000}s linear;
+	-moz-transition: all ${({ spinTime }) => spinTime / 1000}s linear;
+	transition: all ${({ spinTime }) => spinTime / 1000}s linear;
 	left: 0;
 	display: flex;
 	justify-content: center;
@@ -28,14 +27,7 @@ const SquareComponent = styled("div").withConfig({
 	transform: rotate(${({ rotate }) => rotate}deg)
 		translate(${({ radius }) => radius}px)
 		rotate(${({ rotatereverse }) => rotatereverse}deg);
-	> * {
-		background-color: ${({ selected, maincolor }) =>
-			selected ? "white" : maincolor};
-		transform: scale(
-			${({ selected, childradius }) => (selected ? 1 : 6 / childradius)}
-		);
-		// opacity: props.selected ? 1 : 0,
-	}
+
 	&:hover {
 		> * {
 			transform: scale(1);
@@ -48,7 +40,15 @@ const SquareComponent = styled("div").withConfig({
 	}
 `;
 
-const SquareValue = styled.div`
+const SquareValue = styled("div").withConfig({
+	shouldForwardProp: (prop) =>
+		!["fadeTime", "selected", "childRadius", "maincolor"].includes(prop),
+})<{
+	fadeTime: number;
+	selected?: boolean;
+	childRadius: number;
+	maincolor: string;
+}>`
 	width: 100%;
 	height: 100%;
 
@@ -57,10 +57,16 @@ const SquareValue = styled.div`
 	align-items: center;
 	border: 1px solid;
 	border-radius: 100%;
-	transition: transform 0.3s linear;
+	transition: transform ${({ fadeTime }) => fadeTime / 1000}s linear;
 	-webkit-user-select: none; /* Safari */
 	-ms-user-select: none; /* IE 10 and IE 11 */
 	user-select: none;
+
+	background-color: ${({ selected, maincolor }) =>
+		selected ? "white" : maincolor};
+	transform: scale(
+		${({ selected, childRadius }) => (selected ? 1 : 6 / childRadius)}
+	);
 `;
 
 const fadeIn = keyframes`
@@ -83,21 +89,15 @@ const fadeOut = keyframes`
 `;
 
 const HintText = styled("div").withConfig({
-	shouldForwardProp: (prop) => !["fadeTime"].includes(prop),
-})<{ fadeTime: number }>`
+	shouldForwardProp: (prop) => !["fadeTime", "fading"].includes(prop),
+})<{ fadeTime: number; fading: boolean }>`
 	position: absolute;
 	left: 150%;
-	background: none !important;
-	animation: ${({ fadeTime }) => fadeIn} ${({ fadeTime }) => fadeTime / 1000}s
-		linear;
+	/* background: none !important; */
+	animation: ${({ fading }) => (fading ? fadeOut : fadeIn)}
+		${({ fadeTime }) => fadeTime / 1000}s linear;
+	scale: 1 !important;
 `;
-
-// const HintText = styled.div`
-// 	position: absolute;
-// 	left: 150%;
-// 	background: none !important;
-// 	animation: ${fadeIn} 0.2s linear;
-// `;
 
 export function Square({
 	css,
@@ -123,10 +123,25 @@ export function Square({
 }) {
 	const [showHint, setShowHint] = useState(false);
 
+	const [fading, setFading] = useState(false);
+
+	const [timeOut, setTimeOut] = useState<number | undefined>(undefined);
+
 	useEffect(() => {
-		// setTimeout(() => {
-		setShowHint(selected);
-		// }, 500);
+		if (timeOut) clearTimeout(timeOut);
+		let a: number;
+		if (selected) {
+			a = setTimeout(() => {
+				setFading(!selected);
+				setShowHint(selected);
+			}, spinTime);
+		} else {
+			setFading(!selected);
+			a = setTimeout(() => {
+				setShowHint(selected);
+			}, fadeTime * 0.99);
+		}
+		setTimeOut(a);
 	}, [selected]);
 
 	return (
@@ -136,12 +151,22 @@ export function Square({
 				radius={css.radius}
 				rotate={css.rotate}
 				rotatereverse={css.rotateReverse}
-				selected={selected}
-				maincolor={"rgb(66, 86, 122)"} //sh
+				spinTime={spinTime}
 				onClick={onClick}
 			>
-				<SquareValue>{num}</SquareValue>
-				{showHint && <HintText fadeTime={fadeTime}>{text}</HintText>}
+				<SquareValue
+					fadeTime={fadeTime}
+					selected={selected}
+					childRadius={css.childRadius * 2}
+					maincolor={"rgb(66, 86, 122)"} //sh
+				>
+					{num}
+				</SquareValue>
+				{showHint && (
+					<HintText fadeTime={fadeTime} fading={fading}>
+						{text}
+					</HintText>
+				)}
 			</SquareComponent>
 		</>
 	);
