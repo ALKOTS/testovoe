@@ -2,6 +2,7 @@ import { useState } from "react";
 import EventShowcase from "./eventShowcase/EventShowcase";
 import { Rotator, type Date } from "./Rotator/Rotator";
 import styled from "styled-components";
+import "./HistoryShowCase.css";
 const VLine = styled.div`
 	width: 1px;
 	height: 100%;
@@ -25,6 +26,7 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 		<div
 			style={{
 				maxWidth: "1440px",
+				minWidth: "1100px",
 				width: "100%",
 				position: "relative",
 				display: "grid",

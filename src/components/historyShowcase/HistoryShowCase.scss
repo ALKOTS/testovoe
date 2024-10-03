@@ -1,0 +1,12 @@
+$bg-color: rgb(217, 221, 230);
+div {
+	color: rgb(66, 86, 122);
+}
+
+.transparent-border {
+	outline: 1px solid $bg-color;
+}
+
+.transparent-line {
+	background: $bg-color;
+}
