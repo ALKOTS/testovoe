@@ -66,6 +66,7 @@ const YearContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: start;
+	max-width: 320px;
 
 	/* padding: 0 40px; */
 `;

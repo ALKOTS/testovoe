@@ -17,29 +17,27 @@ const HLine = styled.div`
 	top: 50%;
 `;
 
+const HistoryShowCaseContainer = styled.div`
+	max-width: 1440px;
+	min-width: 1100px;
+	max-height: 1080px;
+	width: 100%;
+	position: relative;
+	display: grid;
+	grid-template-rows: 1fr 1fr 1fr;
+	grid-template-columns: 100%;
+	align-items: center;
+	height: 100%;
+	justify-content: center;
+`;
+
 export default function HistoryShowCase({ data }: { data: Date[] }) {
 	const [currentDate, setCurrentDate] = useState(0);
 	const padding = 40;
 	const spinTime = 500;
 	const fadeTime = 200;
 	return (
-		<div
-			style={{
-				maxWidth: "1440px",
-				minWidth: "1100px",
-				width: "100%",
-				position: "relative",
-				display: "grid",
-				gridTemplateRows: "1fr 1fr 1fr",
-				gridTemplateColumns: "100%",
-				// flexDirection: "column",
-				alignItems: "center",
-				height: "100%",
-				justifyContent: "center",
-				// padding: `0 ${padding}px`,
-			}}
-			className="transparent-border"
-		>
+		<HistoryShowCaseContainer className="transparent-border">
 			<VLine className="transparent-line" />
 			<HLine className="transparent-line" />
 			<div></div>
@@ -59,6 +57,6 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				spinTime={spinTime}
 				fadeTime={fadeTime}
 			/>
-		</div>
+		</HistoryShowCaseContainer>
 	);
 }

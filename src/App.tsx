@@ -81,7 +81,8 @@ function App() {
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
-				height: "100%",
+				// height: "100%",
+				flexDirection: "column",
 			}}
 		>
 			<HistoryShowCase data={data} />
