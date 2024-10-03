@@ -93,7 +93,7 @@ const HintText = styled("div").withConfig({
 })<{ fadeTime: number; fading: boolean }>`
 	position: absolute;
 	left: 150%;
-	/* background: none !important; */
+	background: none !important;
 	animation: ${({ fading }) => (fading ? fadeOut : fadeIn)}
 		${({ fadeTime }) => fadeTime / 1000}s linear;
 	scale: 1 !important;
