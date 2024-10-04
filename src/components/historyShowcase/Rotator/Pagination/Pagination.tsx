@@ -8,6 +8,7 @@ const PaginationContainer = styled.div`
 	width: 120px;
 	height: 90px;
 	justify-content: space-between;
+	gap: 30px;
 `;
 
 const ButtonContainer = styled.div`
@@ -21,8 +22,6 @@ const PaginationButton = styled.button`
 	border: 1px solid;
 	border-radius: 100%;
 	color: inherit;
-	width: 50px;
-	height: 50px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -36,20 +35,25 @@ export function Pagination({
 	updateIndex,
 	amount,
 	padding = 40,
+	size = 50,
+	font = 18,
 }: {
 	currentIndex: number;
 	updateIndex: (index: number) => void;
 	amount: number;
 	padding?: number;
+	size?: number;
+	font?: number;
 }) {
 	return (
 		<PaginationContainer style={{ paddingLeft: padding }}>
-			<div style={{ fontSize: "18px", alignSelf: "flex-start" }}>
+			<div style={{ fontSize: `${font}px`, alignSelf: "flex-start" }}>
 				{currentIndex > 10 ? currentIndex + 1 : `0${currentIndex + 1}`}/
 				{amount > 10 ? amount : `0${amount}`}
 			</div>
 			<ButtonContainer>
 				<PaginationButton
+					style={{ width: size, height: size }}
 					onClick={() => {
 						updateIndex(currentIndex - 1);
 					}}
@@ -57,6 +61,7 @@ export function Pagination({
 					<img src={left_arrow} alt="<" />
 				</PaginationButton>
 				<PaginationButton
+					style={{ width: size, height: size }}
 					onClick={() => {
 						updateIndex(currentIndex + 1);
 					}}

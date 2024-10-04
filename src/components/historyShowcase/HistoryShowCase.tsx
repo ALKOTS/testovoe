@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventShowcase from "./eventShowcase/EventShowcase";
 import { Rotator, type Date } from "./Rotator/Rotator";
 import styled from "styled-components";
@@ -79,19 +79,26 @@ const RotatorComponent = styled.div`
 	align-items: center;
 `;
 
+const PaginationDot = styled.div`
+	width: 6px;
+	height: 6px;
+	background-color: #42567a;
+	border-radius: 100%;
+	&:hover {
+		cursor: pointer;
+	}
+`;
+
 const HistoryShowCaseContainer_mobile = styled("div").withConfig({
 	shouldForwardProp: (prop) => !["padding"].includes(prop),
 })<{ padding: number }>`
-	/* display: flex;
-	flex-direction: column;
-	align-items: start; */
 	width: 100%;
 	height: 100%;
 	display: grid;
 	grid-template-rows: 1fr 1fr;
-
+	gap: 10px;
 	> * {
-		margin: ${({ padding }) => padding}px ${({ padding }) => padding / 2}px;
+		margin: 0px ${({ padding }) => padding / 2}px;
 	}
 	/* justify-content: space-between; */
 `;
@@ -130,6 +137,10 @@ export default function HistoryShowCase({
 		console.log(`From ${currentDate + 1} to ${date + 1}`);
 		setCurrentDate(date);
 	};
+
+	useEffect(() => {
+		setCurrentDate(0);
+	}, [isLargeScreen]);
 
 	if (isLargeScreen)
 		return (
@@ -231,13 +242,69 @@ export default function HistoryShowCase({
 					/>
 				</YearsShowcase_mobile>
 			</div>
-			<div>
-				<Pagination
-					currentIndex={currentDate}
-					updateIndex={updateDate}
-					amount={data.length}
-					padding={padding}
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					overflow: "hidden",
+					justifyContent: "space-between",
+				}}
+			>
+				<EventShowcase
+					data={data[currentDate]}
+					currentDate={currentDate}
+					spinTime={spinTime}
+					fadeTime={fadeTime}
+					isMobile={true}
+					textSize={15}
 				/>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						alignItems: "center",
+						position: "relative",
+					}}
+				>
+					<div
+						style={{
+							transform: "scale(0.5)",
+							transformOrigin: "left center",
+							width: "fit-content",
+							height: "fit-content",
+						}}
+					>
+						<Pagination
+							currentIndex={currentDate}
+							updateIndex={updateDate}
+							amount={data.length}
+							padding={0}
+							font={30}
+						/>
+					</div>
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "row",
+							gap: 10,
+							position: "absolute",
+							left: "50%",
+							transform: "translateX(-50%)",
+						}}
+					>
+						{Object.keys(data[currentDate].years).map((_, index) => {
+							return (
+								<PaginationDot
+									key={index}
+									onClick={() => updateDate(index)}
+									style={
+										index === currentDate ? { opacity: 1 } : { opacity: 0.4 }
+									}
+								/>
+							);
+						})}
+					</div>
+				</div>
 			</div>
 		</HistoryShowCaseContainer_mobile>
 	);
