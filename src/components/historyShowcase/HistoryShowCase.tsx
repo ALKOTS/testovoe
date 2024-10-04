@@ -5,6 +5,7 @@ import styled from "styled-components";
 import "./HistoryShowCase.css";
 import { HeaderComponent } from "./Rotator/HeaderComponent/HeaderComponent";
 import { Pagination } from "./Rotator/Pagination/Pagination";
+import AnimatedCounter from "./Rotator/AnimatedCounter/AnimatedCounter";
 const VLine = styled.div`
 	width: 1px;
 	height: 100%;
@@ -50,6 +51,24 @@ const LeftContainer = styled.div`
 	justify-content: space-between;
 `;
 
+const YearsShowcase = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	/* width: 100%; */
+	z-index: 1;
+	gap: 100px;
+	position: absolute;
+`;
+
+const RotatorComponent = styled.div`
+	align-self: center;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
 export default function HistoryShowCase({ data }: { data: Date[] }) {
 	const [currentDate, setCurrentDate] = useState(0);
 	const padding = 40;
@@ -59,6 +78,14 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 
 	const fromColor = "rgba(93,95,239,1)";
 	const toColor = "rgba(239,93,168,1)";
+
+	const animStyle = {
+		fontWeight: "700",
+		lineHeight: "160px",
+		textAlign: "center",
+		letterSpacing: "-0.02em",
+		fontSize: "200px",
+	};
 
 	const updateDate = (date: number) => {
 		if (date < 0) {
@@ -84,20 +111,44 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 					/>
 					<Pagination
 						currentIndex={currentDate}
-						updateIndex={setCurrentDate}
+						updateIndex={updateDate}
 						amount={data.length}
 						padding={padding}
 					/>
 				</LeftContainer>
-				<Rotator
-					rotatorRadius={265}
-					childRadius={28}
-					dates={data}
-					currentDate={currentDate}
-					setCurrentDate={updateDate}
-					spinTime={spinTime}
-					fadeTime={fadeTime}
-				/>
+				<RotatorComponent
+					style={{
+						width: `${rotatorRadius * 2}px`,
+						height: `${rotatorRadius * 2}px`,
+						position: "absolute",
+						left: `calc(50% - ${rotatorRadius}px)`,
+					}}
+					className="transparent-border"
+				>
+					<YearsShowcase>
+						<AnimatedCounter
+							style={{ ...animStyle, ...{ color: `${fromColor}` } }}
+							targetNumber={Number.parseInt(
+								Object.keys(data[currentDate].years)[0]
+							)}
+						/>
+						<AnimatedCounter
+							style={{ ...animStyle, ...{ color: `${toColor}` } }}
+							targetNumber={Number.parseInt(
+								Object.keys(data[currentDate].years).slice(-1)[0]
+							)}
+						/>
+					</YearsShowcase>
+					<Rotator
+						rotatorRadius={265}
+						childRadius={28}
+						dates={data}
+						currentDate={currentDate}
+						setCurrentDate={updateDate}
+						spinTime={spinTime}
+						fadeTime={fadeTime}
+					/>
+				</RotatorComponent>
 			</RotatorContainer>
 
 			<EventShowcase
