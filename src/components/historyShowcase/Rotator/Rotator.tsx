@@ -4,6 +4,8 @@ import { Square } from "./Child";
 import right_arrow from "../../../assets/right_arrow.svg";
 import left_arrow from "../../../assets/left_arrow.svg";
 import AnimatedCounter from "./AnimatedCounter/AnimatedCounter";
+import { HeaderComponent } from "./HeaderComponent/HeaderComponent";
+import { Pagination } from "./Pagination/Pagination";
 // import { AnimatedCounter } from "react-animated-counter";
 
 export interface Date {
@@ -35,46 +37,6 @@ const LeftContainer = styled.div`
 	justify-content: space-between;
 `;
 
-const PaginationContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 120px;
-	height: 90px;
-	justify-content: space-between;
-`;
-
-const ButtonContainer = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-`;
-
-const PaginationButton = styled.button`
-	background: none;
-	border: 1px solid;
-	border-radius: 100%;
-	color: inherit;
-	width: 50px;
-	height: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	&:hover {
-		background: white;
-	}
-`;
-
-const Header = styled.div`
-	/* Исторические даты */
-
-	font-style: normal;
-	font-weight: 700;
-	font-size: 56px;
-	line-height: 120%;
-	max-width: 385px;
-	text-align: start;
-`;
-
 const YearsShowcase = styled.div`
 	display: flex;
 	flex-direction: row;
@@ -83,11 +45,6 @@ const YearsShowcase = styled.div`
 	z-index: 1;
 	gap: 100px;
 	position: absolute;
-`;
-
-const HeaderContainer = styled.div`
-	display: flex;
-	flex-direction: row;
 `;
 
 interface Child {
@@ -138,7 +95,7 @@ export function Rotator({
 	childRadius?: number;
 	dates?: Date[];
 	currentDate?: number;
-	setCurrentDate?: React.Dispatch<React.SetStateAction<number>>;
+	setCurrentDate?: (date: number) => void; //React.Dispatch<React.SetStateAction<number>>;
 	padding?: number;
 	spinTime?: number;
 	fadeTime?: number;
@@ -166,13 +123,6 @@ export function Rotator({
 	const [children, setChildren] = useState<Child[]>([]);
 
 	const changeDate = (date: number) => {
-		if (date < 0) {
-			date = dates.length - 1;
-		}
-		if (date > dates.length - 1) {
-			date = 0;
-		}
-
 		const clockwiseDistance =
 			(date - currentDate_ + dates.length) % dates.length;
 		const counterClockwiseDistance =
@@ -188,51 +138,31 @@ export function Rotator({
 
 		setPosition(new_pos);
 		setCurrentDate_(date);
-		setCurrentDate(date);
+		// setCurrentDate(date);
 	};
 
 	useEffect(() => {
 		buildRotator(childCount, rotatorRadius, childRadius, position, setChildren);
 	}, [position]);
-	// console.log(dates[currentDate_]);
 
-	const headerRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		changeDate(currentDate);
+	}, [currentDate]);
+
 	return (
 		<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
 			<LeftContainer>
-				<HeaderContainer style={{ gap: padding }}>
-					<div
-						style={{
-							height: "100%",
-							width: "5px",
-							background: `linear-gradient(180deg, ${fromColor}0%, ${toColor} 100%)`,
-						}}
-					></div>
-					<Header ref={headerRef}>Исторические даты</Header>
-				</HeaderContainer>
-
-				<PaginationContainer style={{ paddingLeft: padding }}>
-					<div style={{ fontSize: "18px", alignSelf: "flex-start" }}>
-						{currentDate_ > 10 ? currentDate_ + 1 : `0${currentDate_ + 1}`}/
-						{dates.length > 10 ? dates.length : `0${dates.length}`}
-					</div>
-					<ButtonContainer>
-						<PaginationButton
-							onClick={() => {
-								changeDate(currentDate_ - 1);
-							}}
-						>
-							<img src={left_arrow} alt="<" />
-						</PaginationButton>
-						<PaginationButton
-							onClick={() => {
-								changeDate(currentDate_ + 1);
-							}}
-						>
-							<img src={right_arrow} alt=">" />
-						</PaginationButton>
-					</ButtonContainer>
-				</PaginationContainer>
+				<HeaderComponent
+					fromColor={fromColor}
+					toColor={toColor}
+					padding={padding}
+				/>
+				<Pagination
+					currentIndex={currentDate}
+					updateIndex={setCurrentDate}
+					amount={dates.length}
+					padding={padding}
+				/>
 			</LeftContainer>
 
 			<RotatorComponent
@@ -248,13 +178,13 @@ export function Rotator({
 					<AnimatedCounter
 						style={{ ...animStyle, ...{ color: `${fromColor}` } }}
 						targetNumber={Number.parseInt(
-							Object.keys(dates[currentDate_].years)[0]
+							Object.keys(dates[currentDate].years)[0]
 						)}
 					/>
 					<AnimatedCounter
 						style={{ ...animStyle, ...{ color: `${toColor}` } }}
 						targetNumber={Number.parseInt(
-							Object.keys(dates[currentDate_].years).slice(-1)[0]
+							Object.keys(dates[currentDate].years).slice(-1)[0]
 						)}
 					/>
 				</YearsShowcase>
@@ -271,9 +201,9 @@ export function Rotator({
 								key={index}
 								css={value}
 								num={index + 1}
-								selected={index === currentDate_}
+								selected={index === currentDate}
 								text={dates[index].theme}
-								onClick={() => changeDate(index)}
+								onClick={() => setCurrentDate(index)}
 								spinTime={spinTime}
 								fadeTime={fadeTime}
 							/>

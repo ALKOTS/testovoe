@@ -36,6 +36,17 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 	const padding = 40;
 	const spinTime = 500;
 	const fadeTime = 200;
+
+	const updateDate = (date: number) => {
+		if (date < 0) {
+			date = data.length - 1;
+		}
+		if (date > data.length - 1) {
+			date = 0;
+		}
+		setCurrentDate(date);
+	};
+
 	return (
 		<HistoryShowCaseContainer className="transparent-border">
 			<VLine className="transparent-line" />
@@ -46,7 +57,7 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 				childRadius={28}
 				dates={data}
 				currentDate={currentDate}
-				setCurrentDate={setCurrentDate}
+				setCurrentDate={updateDate}
 				padding={padding}
 				spinTime={spinTime}
 				fadeTime={fadeTime}
