@@ -6,6 +6,10 @@ div {
   outline: 1px solid rgb(217, 221, 230);
 }
 
+.transparent-border-bottom {
+  border-bottom: 1px solid rgb(217, 221, 230);
+}
+
 .transparent-line {
   background: rgb(217, 221, 230);
 }/*# sourceMappingURL=HistoryShowCase.css.map */

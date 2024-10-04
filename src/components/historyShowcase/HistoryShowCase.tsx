@@ -61,6 +61,16 @@ const YearsShowcase = styled.div`
 	position: absolute;
 `;
 
+const YearsShowcase_mobile = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	width: 100%;
+	/* z-index: 1; */
+	/* gap: 100px;
+	position: absolute; */
+`;
+
 const RotatorComponent = styled.div`
 	align-self: center;
 	border-radius: 50%;
@@ -69,7 +79,30 @@ const RotatorComponent = styled.div`
 	align-items: center;
 `;
 
-export default function HistoryShowCase({ data }: { data: Date[] }) {
+const HistoryShowCaseContainer_mobile = styled("div").withConfig({
+	shouldForwardProp: (prop) => !["padding"].includes(prop),
+})<{ padding: number }>`
+	/* display: flex;
+	flex-direction: column;
+	align-items: start; */
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+
+	> * {
+		margin: ${({ padding }) => padding}px ${({ padding }) => padding / 2}px;
+	}
+	/* justify-content: space-between; */
+`;
+
+export default function HistoryShowCase({
+	data,
+	isLargeScreen,
+}: {
+	data: Date[];
+	isLargeScreen: boolean;
+}) {
 	const [currentDate, setCurrentDate] = useState(0);
 	const padding = 40;
 	const spinTime = 500;
@@ -81,7 +114,7 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 
 	const animStyle = {
 		fontWeight: "700",
-		lineHeight: "160px",
+		// lineHeight: "160px",
 		textAlign: "center",
 		letterSpacing: "-0.02em",
 		fontSize: "200px",
@@ -94,69 +127,118 @@ export default function HistoryShowCase({ data }: { data: Date[] }) {
 		if (date > data.length - 1) {
 			date = 0;
 		}
+		console.log(`From ${currentDate + 1} to ${date + 1}`);
 		setCurrentDate(date);
 	};
 
-	return (
-		<HistoryShowCaseContainer className="transparent-border">
-			<VLine className="transparent-line" />
-			<HLine className="transparent-line" />
-			<div></div>
-			<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
-				<LeftContainer>
-					<HeaderComponent
-						fromColor={fromColor}
-						toColor={toColor}
-						padding={padding}
-					/>
-					<Pagination
-						currentIndex={currentDate}
-						updateIndex={updateDate}
-						amount={data.length}
-						padding={padding}
-					/>
-				</LeftContainer>
-				<RotatorComponent
-					style={{
-						width: `${rotatorRadius * 2}px`,
-						height: `${rotatorRadius * 2}px`,
-						position: "absolute",
-						left: `calc(50% - ${rotatorRadius}px)`,
-					}}
-					className="transparent-border"
-				>
-					<YearsShowcase>
-						<AnimatedCounter
-							style={{ ...animStyle, ...{ color: `${fromColor}` } }}
-							targetNumber={Number.parseInt(
-								Object.keys(data[currentDate].years)[0]
-							)}
+	if (isLargeScreen)
+		return (
+			<HistoryShowCaseContainer className="transparent-border">
+				<VLine className="transparent-line" />
+				<HLine className="transparent-line" />
+				<div></div>
+				<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
+					<LeftContainer>
+						<HeaderComponent
+							fromColor={fromColor}
+							toColor={toColor}
+							padding={padding}
 						/>
-						<AnimatedCounter
-							style={{ ...animStyle, ...{ color: `${toColor}` } }}
-							targetNumber={Number.parseInt(
-								Object.keys(data[currentDate].years).slice(-1)[0]
-							)}
+						<Pagination
+							currentIndex={currentDate}
+							updateIndex={updateDate}
+							amount={data.length}
+							padding={padding}
 						/>
-					</YearsShowcase>
-					<Rotator
-						rotatorRadius={265}
-						childRadius={28}
-						dates={data}
-						currentDate={currentDate}
-						setCurrentDate={updateDate}
-						spinTime={spinTime}
-						fadeTime={fadeTime}
-					/>
-				</RotatorComponent>
-			</RotatorContainer>
+					</LeftContainer>
+					<RotatorComponent
+						style={{
+							width: `${rotatorRadius * 2}px`,
+							height: `${rotatorRadius * 2}px`,
+							position: "absolute",
+							left: `calc(50% - ${rotatorRadius}px)`,
+						}}
+						className="transparent-border"
+					>
+						<YearsShowcase>
+							<AnimatedCounter
+								style={{ ...animStyle, ...{ color: `${fromColor}` } }}
+								targetNumber={Number.parseInt(
+									Object.keys(data[currentDate].years)[0]
+								)}
+							/>
+							<AnimatedCounter
+								style={{ ...animStyle, ...{ color: `${toColor}` } }}
+								targetNumber={Number.parseInt(
+									Object.keys(data[currentDate].years).slice(-1)[0]
+								)}
+							/>
+						</YearsShowcase>
+						<Rotator
+							rotatorRadius={265}
+							childRadius={28}
+							dates={data}
+							currentDate={currentDate}
+							setCurrentDate={updateDate}
+							spinTime={spinTime}
+							fadeTime={fadeTime}
+						/>
+					</RotatorComponent>
+				</RotatorContainer>
 
-			<EventShowcase
-				data={data[currentDate]}
-				currentDate={currentDate}
-				spinTime={spinTime}
-				fadeTime={fadeTime}
-			/>
-		</HistoryShowCaseContainer>
+				<EventShowcase
+					data={data[currentDate]}
+					currentDate={currentDate}
+					spinTime={spinTime}
+					fadeTime={fadeTime}
+				/>
+			</HistoryShowCaseContainer>
+		);
+	return (
+		<HistoryShowCaseContainer_mobile padding={padding}>
+			<div
+				className="transparent-border-bottom"
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "space-evenly",
+				}}
+			>
+				<HeaderComponent
+					fromColor={fromColor}
+					toColor={toColor}
+					style={{ fontSize: 20, maxWidth: 123 }}
+					show_gradient={false}
+				/>
+				<YearsShowcase_mobile>
+					<AnimatedCounter
+						style={{
+							...animStyle,
+							...{ color: `${fromColor}`, fontSize: "56px" },
+						}}
+						targetNumber={Number.parseInt(
+							Object.keys(data[currentDate].years)[0]
+						)}
+					/>
+					<AnimatedCounter
+						style={{
+							...animStyle,
+							...{ color: `${toColor}`, fontSize: "56px" },
+						}}
+						targetNumber={Number.parseInt(
+							Object.keys(data[currentDate].years).slice(-1)[0]
+						)}
+					/>
+				</YearsShowcase_mobile>
+			</div>
+			<div>
+				<Pagination
+					currentIndex={currentDate}
+					updateIndex={updateDate}
+					amount={data.length}
+					padding={padding}
+				/>
+			</div>
+		</HistoryShowCaseContainer_mobile>
 	);
 }

@@ -7,6 +7,10 @@ div {
 	outline: 1px solid $bg-color;
 }
 
+.transparent-border-bottom {
+	border-bottom: 1px solid $bg-color;
+}
+
 .transparent-line {
 	background: $bg-color;
 }

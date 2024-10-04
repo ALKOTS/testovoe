@@ -3,7 +3,7 @@ import "./App.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import HistoryShowCase from "./components/historyShowcase/HistoryShowCase";
-import EventShowcase from "./components/historyShowcase/eventShowcase/EventShowcase";
+import { useEffect, useState } from "react";
 
 const data = [
 	{
@@ -75,18 +75,30 @@ const data = [
 ];
 
 function App() {
+	const [isLargeScreen, setIsLargeScreen] = useState<boolean>(
+		window.innerWidth >= 1100
+	);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsLargeScreen(window.innerWidth >= 1100);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 	return (
 		<div
 			style={{
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
-				// height: "100%",
+				height: "100%",
 				flexDirection: "column",
 			}}
 		>
-			<HistoryShowCase data={data} />
-			{/* <EventShowcase /> */}
+			<HistoryShowCase data={data} isLargeScreen={isLargeScreen} />
 		</div>
 	);
 }
