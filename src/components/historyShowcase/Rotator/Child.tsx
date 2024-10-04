@@ -131,12 +131,15 @@ export function Square({
 		if (timeOut) clearTimeout(timeOut);
 		let a: number;
 		if (selected) {
+			// @ts-ignore
 			a = setTimeout(() => {
 				setFading(!selected);
 				setShowHint(selected);
 			}, spinTime);
 		} else {
 			setFading(!selected);
+
+			// @ts-ignore
 			a = setTimeout(() => {
 				setShowHint(selected);
 			}, fadeTime * 0.99);

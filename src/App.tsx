@@ -5,7 +5,7 @@ import "swiper/css/navigation";
 import HistoryShowCase from "./components/historyShowcase/HistoryShowCase";
 import { useEffect, useState } from "react";
 
-const data = [
+const data: { theme: string; years: { [key: number]: string } }[] = [
 	{
 		theme: "Кино",
 		years: {

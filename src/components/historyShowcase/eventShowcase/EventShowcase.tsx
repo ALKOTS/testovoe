@@ -36,6 +36,7 @@ const ShowCaseContainer = styled("div").withConfig({
 		${({ fadeTime }) => fadeTime / 1000}s linear;
 	opacity: ${({ fading }) => (fading ? 0 : 1)};
 	height: fit-content;
+	padding-top: 5px;
 `;
 
 const YearNum = styled.div`
@@ -202,6 +203,7 @@ export default function EventShowcase({
 			setData(initialData);
 			setFading(false);
 		}, spinTime);
+		// @ts-ignore
 		setTimeOut(a);
 	}, [currentDate]);
 
