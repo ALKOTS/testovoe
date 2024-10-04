@@ -1,11 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Square } from "./Child";
-import right_arrow from "../../../assets/right_arrow.svg";
-import left_arrow from "../../../assets/left_arrow.svg";
 import AnimatedCounter from "./AnimatedCounter/AnimatedCounter";
-import { HeaderComponent } from "./HeaderComponent/HeaderComponent";
-import { Pagination } from "./Pagination/Pagination";
+
 // import { AnimatedCounter } from "react-animated-counter";
 
 export interface Date {
@@ -19,22 +16,6 @@ const RotatorComponent = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-`;
-
-const RotatorContainer = styled.div`
-	width: 100%;
-	position: relative;
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	align-items: center;
-`;
-const LeftContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	align-items: start;
-	position: relative;
-	justify-content: space-between;
 `;
 
 const YearsShowcase = styled.div`
@@ -87,7 +68,6 @@ export function Rotator({
 	setCurrentDate = () => {
 		console.log("No setter configured");
 	},
-	padding = 40,
 	spinTime = 500,
 	fadeTime = 200,
 }: {
@@ -96,7 +76,6 @@ export function Rotator({
 	dates?: Date[];
 	currentDate?: number;
 	setCurrentDate?: (date: number) => void; //React.Dispatch<React.SetStateAction<number>>;
-	padding?: number;
 	spinTime?: number;
 	fadeTime?: number;
 }) {
@@ -150,67 +129,51 @@ export function Rotator({
 	}, [currentDate]);
 
 	return (
-		<RotatorContainer style={{ height: `${rotatorRadius * 2}px` }}>
-			<LeftContainer>
-				<HeaderComponent
-					fromColor={fromColor}
-					toColor={toColor}
-					padding={padding}
+		<RotatorComponent
+			style={{
+				width: `${rotatorRadius * 2}px`,
+				height: `${rotatorRadius * 2}px`,
+				position: "absolute",
+				left: `calc(50% - ${rotatorRadius}px)`,
+			}}
+			className="transparent-border"
+		>
+			<YearsShowcase>
+				<AnimatedCounter
+					style={{ ...animStyle, ...{ color: `${fromColor}` } }}
+					targetNumber={Number.parseInt(
+						Object.keys(dates[currentDate].years)[0]
+					)}
 				/>
-				<Pagination
-					currentIndex={currentDate}
-					updateIndex={setCurrentDate}
-					amount={dates.length}
-					padding={padding}
+				<AnimatedCounter
+					style={{ ...animStyle, ...{ color: `${toColor}` } }}
+					targetNumber={Number.parseInt(
+						Object.keys(dates[currentDate].years).slice(-1)[0]
+					)}
 				/>
-			</LeftContainer>
-
-			<RotatorComponent
+			</YearsShowcase>
+			<div
 				style={{
-					width: `${rotatorRadius * 2}px`,
-					height: `${rotatorRadius * 2}px`,
 					position: "absolute",
-					left: `calc(50% - ${rotatorRadius}px)`,
+					top: `${childOffset}px`,
+					left: `${childOffset}px`,
 				}}
-				className="transparent-border"
 			>
-				<YearsShowcase>
-					<AnimatedCounter
-						style={{ ...animStyle, ...{ color: `${fromColor}` } }}
-						targetNumber={Number.parseInt(
-							Object.keys(dates[currentDate].years)[0]
-						)}
-					/>
-					<AnimatedCounter
-						style={{ ...animStyle, ...{ color: `${toColor}` } }}
-						targetNumber={Number.parseInt(
-							Object.keys(dates[currentDate].years).slice(-1)[0]
-						)}
-					/>
-				</YearsShowcase>
-				<div
-					style={{
-						position: "absolute",
-						top: `${childOffset}px`,
-						left: `${childOffset}px`,
-					}}
-				>
-					{children.map(function (value, index) {
-						return (
-							<Square
-								key={index}
-								css={value}
-								num={index + 1}
-								selected={index === currentDate}
-								text={dates[index].theme}
-								onClick={() => setCurrentDate(index)}
-								spinTime={spinTime}
-								fadeTime={fadeTime}
-							/>
-						);
-					})}
-				</div>
-			</RotatorComponent>
-		</RotatorContainer>
+				{children.map(function (value, index) {
+					return (
+						<Square
+							key={index}
+							css={value}
+							num={index + 1}
+							selected={index === currentDate}
+							text={dates[index].theme}
+							onClick={() => setCurrentDate(index)}
+							spinTime={spinTime}
+							fadeTime={fadeTime}
+						/>
+					);
+				})}
+			</div>
+		</RotatorComponent>
 	);
 }

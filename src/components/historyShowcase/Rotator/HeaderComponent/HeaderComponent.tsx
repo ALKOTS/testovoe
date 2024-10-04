@@ -10,6 +10,7 @@ const Header = styled.div`
 	line-height: 120%;
 	max-width: 385px;
 	text-align: start;
+	user-select: none;
 `;
 
 const HeaderContainer = styled.div`
